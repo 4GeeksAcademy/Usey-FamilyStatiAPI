@@ -36,7 +36,37 @@ def handle_hello():
     response_body = {"hello": "world",
                      "family": members}
     return jsonify(response_body), 200
+### my code 
 
+@app.route('/members', methods=['POST'])
+def add_member():
+    member = request.json
+    jackson_family.add_member(member)
+
+    member = jackson_family.get_all_members()
+
+    return jsonify(member), 200
+
+@app.route('/members/<int:member_id>', methods=['PUT'])
+def update_member(member_id):
+    change_data = request.get_json()
+    member = jackson_family.put_member(member_id, change_data)
+    return jsonify(member), 200
+
+
+@app.route('/members/<int:member_id>', methods=['DELETE'])
+def delete_member(member_id):
+    member = jackson_family.delete_member(member_id)
+    if member == None:
+        return 400, "member ID doesn’t exist"
+    elif jackson_family.get_member(member_id):
+        return 500, "member not deleted"
+    else:
+        return jsonify(member), 200
+    
+
+
+### my code 
 
 
 # This only runs if `$ python src/app.py` is executed
